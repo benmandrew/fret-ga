@@ -55,5 +55,35 @@ class TestTimingMutation(unittest.TestCase):
             self.assertEqual(fret.str_of_timing(mutated_timing), expected)
 
 
+class TestRequirementMutation(unittest.TestCase):
+    def test_mutate_requirement(self) -> None:
+        all_ap = [prop.AP("x"), prop.AP("y"), prop.AP("z")]
+        cond = prop.AP("x")
+        cons = prop.And(prop.Not(prop.AP("y")), prop.AP("x"))
+        req = fret.Requirement(cond, fret.Always(), cons)
+
+        seed_result_pairs = [
+            (0, "if x, then after 7 timesteps, (¬(y)) ∧ (x)"),
+            (4, "if z, then always, (¬(y)) ∧ (x)"),
+            (5, "if x, then always, ((y) ∧ (z)) ∧ (y)"),
+            (6, "if x, then always, ¬(¬(y))"),
+            (7, "if x, then at next timepoint, (¬(y)) ∧ (x)"),
+            (14, "always, (¬(y)) ∧ (x)"),
+            (15, "always, (¬(y)) ∧ (x)"),
+            (16, "if x, then never, (¬(y)) ∧ (x)"),
+            (17, "if x, then always, ¬((¬(¬(y))) ∧ (¬(x)))"),
+            (18, "always, (¬(y)) ∧ (x)"),
+            (19, "if x, then always, (x) ∨ (z)"),
+            (20, "if x, then always, ¬(x)"),
+            (21, "if ¬(x), then always, (¬(y)) ∧ (x)"),
+            (22, "always, (¬(y)) ∧ (x)"),
+            (27, "if x, then always, ¬(((y) ∧ (¬(y))) ∨ (y))"),
+        ]
+        for seed, expected in seed_result_pairs:
+            rand = random.Random(seed)
+            mutated_req = req.mutate(all_ap, rand)
+            self.assertEqual(str(mutated_req), expected)
+
+
 if __name__ == "__main__":
     unittest.main()
