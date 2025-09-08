@@ -1,6 +1,6 @@
 import unittest
 
-from src.syntax import prop
+from src.logic import prop
 
 
 class TestPropToString(unittest.TestCase):

@@ -1,4 +1,4 @@
-from src.syntax import fret, prop
+from src.logic import fret, prop
 
 
 def main() -> None:

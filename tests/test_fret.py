@@ -1,6 +1,6 @@
 import unittest
 
-from src.syntax import fret, prop
+from src.logic import fret, prop
 
 
 class TestFretToString(unittest.TestCase):

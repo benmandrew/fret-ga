@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.syntax import prop
+from src.logic import prop
 
 
 @dataclass(frozen=True, order=True)
