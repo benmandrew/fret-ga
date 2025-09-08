@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import typing
 from dataclasses import dataclass
 
 from src.logic import prop
+
+if typing.TYPE_CHECKING:
+    import random
 
 
 @dataclass(frozen=True, order=True)
@@ -69,6 +73,31 @@ def str_of_timing(timing: Timing) -> str:
         return f"after {timing.t} timesteps"
     msg = f"Unknown timing type: {type(timing)}"
     raise TypeError(msg)
+
+
+def mutate_timing(timing: Timing, rand: random.Random) -> Timing:
+    choices: list[type] = [
+        Immediately,
+        AtNextTimepoint,
+        Eventually,
+        Always,
+        Never,
+        Within,
+        For,
+        After,
+    ]
+    choices.remove(type(timing))
+    choice = rand.choice(choices)
+    if choice in {Immediately, AtNextTimepoint, Eventually, Always, Never}:
+        result = choice()
+        assert isinstance(result, Timing)
+        return result
+    if choice in {Within, For, After}:
+        result = choice(rand.randint(1, 10))
+        assert isinstance(result, Timing)
+        return result
+    msg = "Unreachable"
+    raise RuntimeError(msg)
 
 
 class Requirement:

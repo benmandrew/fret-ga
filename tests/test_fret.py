@@ -1,3 +1,4 @@
+import random
 import unittest
 
 from src.logic import fret, prop
@@ -30,6 +31,28 @@ class TestFretToString(unittest.TestCase):
         cons = prop.AP("qux")
         req = fret.Requirement(cond, fret.For(3), cons)
         self.assertEqual(str(req), "if foo, then for 3 timesteps, qux")
+
+
+class TestTimingMutation(unittest.TestCase):
+    def test_mutate_timing(self) -> None:
+        timing = fret.Immediately()
+        seed_result_pairs = [
+            (0, "after 7 timesteps"),
+            (1, "eventually"),
+            (2, "after 1 timesteps"),
+            (5, "within 5 timesteps"),
+            (6, "after 10 timesteps"),
+            (7, "always"),
+            (9, "never"),
+            (10, "within 1 timesteps"),
+            (14, "at next timepoint"),
+            (17, "within 7 timesteps"),
+            (19, "for 1 timesteps"),
+        ]
+        for seed, expected in seed_result_pairs:
+            rand = random.Random(seed)
+            mutated_timing = fret.mutate_timing(timing, rand)
+            self.assertEqual(fret.str_of_timing(mutated_timing), expected)
 
 
 if __name__ == "__main__":
