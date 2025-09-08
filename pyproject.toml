@@ -1,0 +1,29 @@
+[tool.black]
+line-length = 80
+
+[tool.ruff]
+lint.select = [
+    "ALL"
+]
+
+lint.ignore = [
+    "S101",  # Allow assert
+    "S603",  # Allow subprocess calls
+    "PT",    # Ignore all pytest rules (using unittest instead)
+    "D",
+    "C901",
+    "PLR0911",
+    "PLR0912",
+    "ERA001",  # Allow commented-out code
+]
+
+[tool.pylint.basic]
+no-docstring-rgx = ".*"
+disable = [
+    "missing-module-docstring",
+    "too-many-return-statements",
+    "too-many-branches",
+    "too-few-public-methods",
+    "invalid-name",
+    "duplicate-code",
+]
