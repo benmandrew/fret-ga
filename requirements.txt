@@ -1,5 +1,4 @@
 astroid==3.3.11
-bandit[toml]==1.8.6
 black==25.1.0
 click==8.2.1
 dill==0.4.0

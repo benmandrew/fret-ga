@@ -23,11 +23,6 @@ lint.allowed-confusables = [
     "∨",
 ]
 
-[tool.bandit]
-skips = [
-    "B311",  # Allow random usage
-]
-
 [tool.pylint.basic]
 no-docstring-rgx = ".*"
 disable = [

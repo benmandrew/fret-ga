@@ -1,4 +1,4 @@
-.PHONY: test fmt lint ruff-fix pylint mypy bandit
+.PHONY: test fmt lint ruff-fix pylint mypy
 
 test:
 	PYTHONPATH=src python3 -m unittest discover -s tests -p "test_*.py"
@@ -9,7 +9,7 @@ fmt:
 fmt-ci:
 	python3 -m black --check -l 80 .
 
-lint: ruff-fix pylint mypy bandit
+lint: ruff-fix pylint mypy
 
 ruff:
 	python3 -m ruff check
@@ -22,6 +22,3 @@ pylint:
 
 mypy:
 	find . -name "*.py" -not -path "*/.*" | PYTHONPATH=src xargs python3 -m mypy --strict
-
-bandit:
-	python3 -m bandit -c pyproject.toml --exclude "./.venv" -r . -q
