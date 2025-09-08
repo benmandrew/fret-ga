@@ -6,7 +6,13 @@ test:
 fmt:
 	python3 -m black -l 80 .
 
+fmt-ci:
+	python3 -m black --check -l 80 .
+
 lint: ruff-fix pylint mypy bandit
+
+ruff:
+	python3 -m ruff check
 
 ruff-fix:
 	python3 -m ruff check --fix
