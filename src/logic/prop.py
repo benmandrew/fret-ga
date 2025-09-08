@@ -109,9 +109,28 @@ def mutate_unary(p: Unary, all_ap: list[AP], rand: random.Random) -> Prop:
     raise TypeError(msg)
 
 
-def mutate_binary(_p: Binary, _all_ap: list[AP], _rand: random.Random) -> Prop:
-    msg = "Not implemented yet"
-    raise NotImplementedError(msg)
+def mutate_binary(p: Binary, all_ap: list[AP], rand: random.Random) -> Prop:
+    choice = rand.randint(0, 3)
+    if choice == 0:
+        return mutate(p.left, all_ap, rand)
+    if choice == 1:
+        return mutate(p.right, all_ap, rand)
+    if choice == 2:
+        return random_binary(
+            mutate(p.left, all_ap, rand),
+            mutate(p.right, all_ap, rand),
+            rand,
+        )
+    if choice == 3:
+        return Not(
+            random_binary(
+                mutate(p.left, all_ap, rand),
+                mutate(p.right, all_ap, rand),
+                rand,
+            ),
+        )
+    msg = f"Invalid choice: {choice}"
+    raise ValueError(msg)
 
 
 def mutate(p: Prop, all_ap: list[AP], rand: random.Random) -> Prop:

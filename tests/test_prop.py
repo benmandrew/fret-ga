@@ -34,23 +34,47 @@ class TestPropToString(unittest.TestCase):
         )
 
 
+def mutate_deterministic(p: prop.Prop, all_ap: list[prop.AP], seed: int) -> str:
+    rand = random.Random(seed)
+    return prop.str_of_prop(prop.mutate(p, all_ap, rand))
+
+
 class TestPropMutation(unittest.TestCase):
+
     def test_unary(self) -> None:
         all_ap = [prop.AP("x"), prop.AP("y"), prop.AP("z")]
         p = prop.Not(prop.AP("x"))
 
-        def test_with_seed(seed: int, expected: str) -> None:
-            rand = random.Random(seed)
-            mutated_p = prop.mutate(p, all_ap, rand)
-            self.assertEqual(prop.str_of_prop(mutated_p), expected)
+        seed_result_pairs = [
+            (0, "¬(¬(x))"),
+            (1, "z"),
+            (2, "y"),
+            (4, "¬(x)"),
+            (5, "(y) ∧ (¬(x))"),
+            (6, "(x) ∨ (¬(x))"),
+            (20, "(z) ∧ (z)"),
+        ]
+        for seed, expected in seed_result_pairs:
+            self.assertEqual(mutate_deterministic(p, all_ap, seed), expected)
 
-        test_with_seed(0, "¬(¬(x))")
-        test_with_seed(1, "z")
-        test_with_seed(2, "y")
-        test_with_seed(4, "¬(x)")
-        test_with_seed(5, "(y) ∧ (¬(x))")
-        test_with_seed(6, "(x) ∨ (¬(x))")
-        test_with_seed(20, "(z) ∧ (z)")
+    def test_binary(self) -> None:
+        all_ap = [prop.AP("x"), prop.AP("y"), prop.AP("z")]
+        p = prop.And(prop.AP("x"), prop.AP("y"))
+
+        seed_result_pairs = [
+            (0, "¬((¬(x)) ∨ (z))"),
+            (1, "z"),
+            (2, "y"),
+            (3, "z"),
+            (4, "¬(y)"),
+            (5, "(¬(x)) ∧ (z)"),
+            (6, "¬(x)"),
+            (7, "(z) ∧ (x)"),
+            (8, "¬(y)"),
+            (9, "¬((¬(x)) ∧ (¬(y)))"),
+        ]
+        for seed, expected in seed_result_pairs:
+            self.assertEqual(mutate_deterministic(p, all_ap, seed), expected)
 
 
 if __name__ == "__main__":
