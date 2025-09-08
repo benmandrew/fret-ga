@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from src.logic import fret, prop
+from src import fret, prop
 
 
 class TestFretToString(unittest.TestCase):

@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from src.logic import prop
+from src import prop
 
 
 class TestPropToString(unittest.TestCase):

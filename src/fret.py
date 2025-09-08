@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 from dataclasses import dataclass
 
-from src.logic import prop
+from src import prop
 
 if typing.TYPE_CHECKING:
     import random
