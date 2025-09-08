@@ -62,11 +62,11 @@ def str_of_timing(timing: Timing) -> str:
     if isinstance(timing, Never):
         return "never"
     if isinstance(timing, Within):
-        return f"within {timing.t}"
+        return f"within {timing.t} timesteps"
     if isinstance(timing, For):
-        return f"for {timing.t}"
+        return f"for {timing.t} timesteps"
     if isinstance(timing, After):
-        return f"after {timing.t}"
+        return f"after {timing.t} timesteps"
     msg = f"Unknown timing type: {type(timing)}"
     raise TypeError(msg)
 
@@ -84,9 +84,9 @@ class Requirement:
 
     def __str__(self) -> str:
         if self.condition is None:
-            return f"{str_of_timing(self.timing)} {prop.str_of_prop(self.consequent)}"
+            return f"{str_of_timing(self.timing)}, {prop.str_of_prop(self.consequent)}"
         return (
             f"if {prop.str_of_prop(self.condition)},"
-            f" then {str_of_timing(self.timing)}"
+            f" then {str_of_timing(self.timing)},"
             f" {prop.str_of_prop(self.consequent)}"
         )
