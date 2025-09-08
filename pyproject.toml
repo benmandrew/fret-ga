@@ -19,6 +19,10 @@ lint.ignore = [
     "PLR2004", # Allow magic values in comparisons
 ]
 
+lint.allowed-confusables = [
+    "∨",
+]
+
 [tool.bandit]
 skips = [
     "B311",  # Allow random usage

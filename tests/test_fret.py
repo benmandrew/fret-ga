@@ -5,9 +5,9 @@ from src.syntax import fret, prop
 
 class TestFretToString(unittest.TestCase):
     def test_requirement_immediately(self) -> None:
-        p = prop.AP("foo")
+        p = prop.And(prop.AP("foo"), prop.Not(prop.AP("bar")))
         req = fret.Requirement(None, fret.Immediately(), p)
-        self.assertEqual(str(req), "immediately foo")
+        self.assertEqual(str(req), "immediately (foo) ∧ (¬(bar))")
 
     def test_requirement_eventually(self) -> None:
         p = prop.AP("bar")

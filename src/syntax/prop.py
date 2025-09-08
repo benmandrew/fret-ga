@@ -57,7 +57,7 @@ def str_of_prop(p: Prop) -> str:
     if isinstance(p, And):
         return f"({str_of_prop(p.left)}) ∧ ({str_of_prop(p.right)})"
     if isinstance(p, Or):
-        return f"({str_of_prop(p.left)}) ∨ ({str_of_prop(p.right)})"  # noqa: RUF001
+        return f"({str_of_prop(p.left)}) ∨ ({str_of_prop(p.right)})"
     msg = f"Unknown Prop type: {type(p)}"
     raise TypeError(msg)
 
