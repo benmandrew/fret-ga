@@ -1,4 +1,7 @@
-.PHONY: fmt lint ruff-fix pylint mypy bandit
+.PHONY: test fmt lint ruff-fix pylint mypy bandit
+
+test:
+	PYTHONPATH=src python3 -m unittest discover -s tests -p "test_*.py"
 
 fmt:
 	python3 -m black -l 80 .
