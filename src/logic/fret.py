@@ -10,42 +10,42 @@ class Timing:
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Immediately(Timing):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class AtNextTimepoint(Timing):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Eventually(Timing):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Always(Timing):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Never(Timing):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Within(Timing):
     t: int
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class For(Timing):
     t: int
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class After(Timing):
     t: int
 

@@ -1,3 +1,4 @@
+import random
 import unittest
 
 from src.logic import prop
@@ -31,6 +32,25 @@ class TestPropToString(unittest.TestCase):
             prop.str_of_prop(p),
             "((True) ∧ (¬(x))) ∨ ((False) ∧ (y))",
         )
+
+
+class TestPropMutation(unittest.TestCase):
+    def test_unary(self) -> None:
+        all_ap = [prop.AP("x"), prop.AP("y"), prop.AP("z")]
+        p = prop.Not(prop.AP("x"))
+
+        def test_with_seed(seed: int, expected: str) -> None:
+            rand = random.Random(seed)
+            mutated_p = prop.mutate(p, all_ap, rand)
+            self.assertEqual(prop.str_of_prop(mutated_p), expected)
+
+        test_with_seed(0, "¬(¬(x))")
+        test_with_seed(1, "z")
+        test_with_seed(2, "y")
+        test_with_seed(4, "¬(x)")
+        test_with_seed(5, "(y) ∧ (¬(x))")
+        test_with_seed(6, "(x) ∨ (¬(x))")
+        test_with_seed(20, "(z) ∧ (z)")
 
 
 if __name__ == "__main__":

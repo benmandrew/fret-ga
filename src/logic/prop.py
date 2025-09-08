@@ -1,7 +1,10 @@
 from __future__ import annotations
 
-import random
+import typing
 from dataclasses import dataclass
+
+if typing.TYPE_CHECKING:
+    import random
 
 
 @dataclass(frozen=True, order=True)
@@ -9,33 +12,33 @@ class Prop:
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class TrueBool(Prop):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class FalseBool(Prop):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class AP(Prop):
     name: str
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Not(Prop):
     operand: Prop
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class And(Prop):
     left: Prop
     right: Prop
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Or(Prop):
     left: Prop
     right: Prop
@@ -62,14 +65,16 @@ def str_of_prop(p: Prop) -> str:
     raise TypeError(msg)
 
 
-def random_ap(ap_set: set[AP], without: AP | None = None) -> AP:
+def random_ap(all_ap: list[AP], without: AP | None, rand: random.Random) -> AP:
     if without is None:
-        return random.choice(list(ap_set))
-    return random.choice(list(ap_set - {without}))
+        return rand.choice(all_ap)
+    copied = all_ap.copy()
+    copied.remove(without)
+    return rand.choice(copied)
 
 
-def random_binary(left: Prop, right: Prop) -> Prop:
-    choice = random.randint(0, 1)
+def random_binary(left: Prop, right: Prop, rand: random.Random) -> Prop:
+    choice = rand.randint(0, 1)
     if choice == 0:
         return And(left, right)
     if choice == 1:
@@ -78,43 +83,47 @@ def random_binary(left: Prop, right: Prop) -> Prop:
     raise ValueError(msg)
 
 
-def mutate_ap(p: AP, ap_set: set[AP]) -> Prop:
-    choice = random.randint(0, 1)
+def mutate_ap(p: AP, all_ap: list[AP], rand: random.Random) -> Prop:
+    choice = rand.randint(0, 1)
     if choice == 0:
-        return random_ap(ap_set, without=p)
+        return random_ap(all_ap, p, rand=rand)
     if choice == 1:
         return Not(p)
     msg = f"Invalid choice: {choice}"
     raise ValueError(msg)
 
 
-def mutate_unary(p: Unary, ap_set: set[AP]) -> Prop:
-    choice = random.randint(0, 2)
+def mutate_unary(p: Unary, all_ap: list[AP], rand: random.Random) -> Prop:
+    choice = rand.randint(0, 2)
     if choice == 0:
-        return mutate(p.operand, ap_set)
+        return mutate(p.operand, all_ap, rand)
     if choice == 1:
-        return Not(mutate(p.operand, ap_set))
+        return Not(mutate(p.operand, all_ap, rand))
     if choice == 2:
-        return random_binary(random_ap(ap_set), mutate(p.operand, ap_set))
+        return random_binary(
+            random_ap(all_ap, None, rand),
+            mutate(p.operand, all_ap, rand),
+            rand,
+        )
     msg = f"Unknown unary Prop type: {type(p)}"
     raise TypeError(msg)
 
 
-def mutate_binary(_p: Binary, _ap_set: set[AP]) -> Prop:
+def mutate_binary(_p: Binary, _all_ap: list[AP], _rand: random.Random) -> Prop:
     msg = "Not implemented yet"
     raise NotImplementedError(msg)
 
 
-def mutate(p: Prop, ap_set: set[AP]) -> Prop:
+def mutate(p: Prop, all_ap: list[AP], rand: random.Random) -> Prop:
     if isinstance(p, TrueBool):
         return FalseBool()
     if isinstance(p, FalseBool):
         return TrueBool()
     if isinstance(p, AP):
-        return mutate_ap(p, ap_set)
+        return mutate_ap(p, all_ap, rand)
     if isinstance(p, Unary):
-        return mutate_unary(p, ap_set)
+        return mutate_unary(p, all_ap, rand)
     if isinstance(p, Binary):
-        return mutate_binary(p, ap_set)
+        return mutate_binary(p, all_ap, rand)
     msg = f"Unknown Prop type: {type(p)}"
     raise TypeError(msg)
